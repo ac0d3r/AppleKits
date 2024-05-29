@@ -71,3 +71,4 @@ iOSInjectionProject/
 .DS_Store
 *.o
 .trash/
+*.dylib
