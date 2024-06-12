@@ -101,9 +101,9 @@ clang -arch x86_64 -framework Foundation -o out/ptrace-tester ptrace_syscall.m
 
 #### 总结
 
-1. 先设置 main 断点没跑到 `Process xxx exited with status = 45`。
-2. 开始排查加载的第三方库，挨个断点也没看到 syscall 的地方。
-3. 在把主 macho 函数都设置下断点，就找到了：
+1. 先设置 main 断点没跑到，进程直接退出：`Process xxx exited with status = 45`。
+2. 开始排查加载的第三方库，挨个断点也没看到 `syscall` 的地方。
+3. 最后把主 macho 函数都设置下断点，就找到了：
 
 ```bash
 $lldb  "/Applications/DemoApp.app/Contents/MacOS/DemoApp"
@@ -123,3 +123,4 @@ Target 0: (DemoApp) stopped.
 ## 参考文章
 - [Defeating Anti-Debug Techniques: macOS ptrace variants](https://alexomara.com/blog/defeating-anti-debug-techniques-macos-ptrace-variants/)
 - [Preventing an iOS mobile application from being debugged](https://medium.com/csg-govtech/preventing-an-ios-mobile-application-from-being-debugged-the-secure-way-1094731ff566)
+- [A macOS anti-debug technique using ptrace](https://cardaci.xyz/blog/2018/02/12/a-macos-anti-debug-technique-using-ptrace/)
