@@ -8,7 +8,7 @@
 int sysctl(int *name, u_int namelen, void *oldp, size_t *oldlenp, void *newp,size_t newlen);
 ```
 
-检测函数：
+检测示例：
 
 ```c
 #include <assert.h>
