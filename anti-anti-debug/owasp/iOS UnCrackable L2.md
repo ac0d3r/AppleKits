@@ -102,3 +102,43 @@ Interceptor.attach(ObjC.classes.AESCrypt["+ decrypt:password:"].implementation, 
 ```
 
 ![](./imgs/IMG_0006.PNG)
+
+## 后续 - 解开原来的密文
+
+密文地址：0x10000e000
+密文：`9Ing3PQpLWF3ILQRL3W/5yJgo+VQnJzkFjPnGQa/wxw=`
+
+密钥的计算方式在 sub_100005268：
+
+- 获取图像基地址，开始解析 Mach 头
+- 循环 LoadCommands 找到 __TEXT __text Section 部分并计算其MD5
+- 返回 MD5
+
+按照下面的步骤来提取 __text 并计算md5：
+- 因为bin 是个 fat macho 先瘦身：`lipo  UnCrackable -thin arm64 -output UnCrackable_arm64`
+- 查看 __text section head：`otool -l UnCrackable_arm64 | grep -A 5 'sectname __text'`
+
+```text
+ sectname __text
+   segname __TEXT
+      addr 0x00000001000051f8
+      size 0x0000000000004280
+    offset 20984
+     align 2^2 (4)
+```
+
+- 提取内容：`dd if=UnCrackable_arm64 bs=1 skip=20984 count=17024 of=text_section.bin`
+- 计算md5：`md5 text_section.bin`
+
+```text
+MD5 (text_section.bin) = 3b367854b6a0541c6fa04b20cf211998
+```
+
+调用App解密函数，无法解密；我又觉得是这个App可能是跑在armv7下的，我也按照上面的提取方式重新计算 md5 还是无法解密：
+```js
+ObjC.classes.AESCrypt["+ decrypt:password:"](ObjC.classes.NSString.stringWithString_
+("9Ing3PQpLWF3ILQRL3W/5yJgo+VQnJzkFjPnGQa/wxw="), ObjC.classes.NSString.stringWithString_("3b367854b6a0541c6fa04b20cf211998"))
+
+ObjC.classes.AESCrypt["+ decrypt:password:"](ObjC.classes.NSString.stringWithString_
+("9Ing3PQpLWF3ILQRL3W/5yJgo+VQnJzkFjPnGQa/wxw="), ObjC.classes.NSString.stringWithString_("219a4fe5604c3b6200817b3e9c49094d"))
+```
