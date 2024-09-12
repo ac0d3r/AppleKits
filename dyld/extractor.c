@@ -1,9 +1,11 @@
-// source code
-//* https://opensource.apple.com/source/dyld/dyld-750.5/launch-cache/dsc_extractor.cpp.auto.html
-// ipsw
-//# https://github.com/blacktop/ipsw/blob/master/pkg/dyld/split.go
-# build
-//# clang extractor.c -o dyld_extractor
+/* 
+source code
+  https://opensource.apple.com/source/dyld/dyld-750.5/launch-cache/dsc_extractor.cpp.auto.html
+ipsw
+  https://github.com/blacktop/ipsw/blob/master/pkg/dyld/split.go
+build
+  clang extractor.c -o dyld_extractor
+*/
 
 #include <dlfcn.h>
 #include <stddef.h>
